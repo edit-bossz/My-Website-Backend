@@ -1,6 +1,6 @@
 const recordVisitor = async (req, res) => {
   // Allow requests from specific frontend domain (or use '*' for testing)
-  res.setHeader('Access-Control-Allow-Origin', 'https://edit-bossz.github.io'); 
+  res.setHeader('Access-Control-Allow-Origin', 'https://edit-bossz.github.io/My-Website/'); 
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
