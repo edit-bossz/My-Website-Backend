@@ -16,6 +16,11 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   .catch((err) => console.error('Failed to connect to MongoDB Atlas', err));
 
 module.exports = async (req, res) => {
+  // Enable CORS for frontend requests
+  res.setHeader('Access-Control-Allow-Origin', '*');  // Allow requests from any origin
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');  // Allow certain HTTP methods
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');  // Allow certain headers
+  
   if (req.method === 'GET') {
     const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     const time = new Date().toISOString();
