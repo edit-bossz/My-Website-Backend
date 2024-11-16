@@ -1,3 +1,32 @@
+const recordVisitor = async (req, res) => {
+  // Allow requests from specific frontend domain (or use '*' for testing)
+  res.setHeader('Access-Control-Allow-Origin', 'https://edit-bossz.github.io'); 
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    // Handle the preflight request
+    res.status(204).end();
+    return;
+  }
+
+  if (req.method === 'GET') {
+    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    const time = new Date().toISOString();
+
+    try {
+      await collection.insertOne({ ip, time });
+      console.log(`Data saved. IP Address: ${ip}, Time: ${time}`);
+      res.status(200).send('Data recorded');
+    } catch (err) {
+      console.error('Error saving data to MongoDB:', err);
+      res.status(500).send('Error recording data');
+    }
+  } else {
+    res.status(405).send('Method Not Allowed');
+  }
+};
+
 const express = require('express');
 const { MongoClient } = require('mongodb');
 
