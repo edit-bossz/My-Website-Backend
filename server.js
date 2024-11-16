@@ -27,8 +27,17 @@ MongoClient.connect(uri)
   });
 
 // Middleware to handle CORS and JSON requests
-app.use(cors()); // Allow all origins for testing
 app.use(express.json()); // Automatically parse incoming JSON
+
+// Enable CORS for all origins for testing
+app.use(cors());
+
+// Handle specific CORS configuration (if needed for production)
+app.use(cors({
+  origin: 'https://edit-bossz.github.io/My-Website', // Replace with your live frontend URL (GitHub Pages URL)
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type'],
+}));
 
 // Record visitor function
 const recordVisitor = async (req, res) => {
@@ -58,7 +67,3 @@ const recordVisitor = async (req, res) => {
 
 // Set up route for visitor recording
 app.get('/record', recordVisitor);
-
-app.use(cors({
-  origin: 'https://edit-bossz.github.io/My-Website/' // Replace with your live frontend URL
-}));
