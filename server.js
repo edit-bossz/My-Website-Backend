@@ -10,12 +10,6 @@ const uri = 'mongodb+srv://Mayukh-Roy:20qtJDjiXs3fFi1w@for-my-website.houtp.mong
 
 let db, collection;
 
-// Middleware to handle CORS and JSON requests
-app.use(cors({
-  origin: 'https://edit-bossz.github.io/My-Website/' // Replace with your live frontend URL
-}));
-app.use(express.json()); // Automatically parse incoming JSON
-
 // MongoDB connection
 MongoClient.connect(uri)
   .then((client) => {
@@ -31,6 +25,10 @@ MongoClient.connect(uri)
   .catch((err) => {
     console.error('Failed to connect to MongoDB Atlas:', err);
   });
+
+// Middleware to handle CORS and JSON requests
+app.use(cors()); // Allow all origins for testing
+app.use(express.json()); // Automatically parse incoming JSON
 
 // Record visitor function
 const recordVisitor = async (req, res) => {
@@ -60,7 +58,6 @@ const recordVisitor = async (req, res) => {
 
 // Set up route for visitor recording
 app.get('/record', recordVisitor);
-
 
 app.use(cors({
   origin: 'https://edit-bossz.github.io/My-Website/' // Replace with your live frontend URL
