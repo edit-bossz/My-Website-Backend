@@ -7,7 +7,7 @@ let db;
 let collection;
 
 // Connect to MongoDB Atlas only once during server startup
-MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+MongoClient.connect(uri)
   .then((connection) => {
     client = connection;
     db = client.db('website_data'); // Database name
