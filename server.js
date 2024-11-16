@@ -3,7 +3,7 @@ const recordVisitor = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', 'https://edit-bossz.github.io/My-Website/'); 
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
+}
 const express = require('express');
 const { MongoClient } = require('mongodb');
 
