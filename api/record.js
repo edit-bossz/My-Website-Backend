@@ -32,4 +32,4 @@ module.exports = async (req, res) => {
   } else {
     res.status(405).send('Method Not Allowed');
   }
-};
+}
