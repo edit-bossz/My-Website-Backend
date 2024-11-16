@@ -60,3 +60,8 @@ const recordVisitor = async (req, res) => {
 
 // Set up route for visitor recording
 app.get('/record', recordVisitor);
+
+
+app.use(cors({
+  origin: 'https://edit-bossz.github.io/My-Website/' // Replace with your live frontend URL
+}));
