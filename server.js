@@ -59,3 +59,4 @@ const recordVisitor = async (req, res) => {
 // Set up route for visitor recording
 app.get('/record', recordVisitor);
 
+app.use(cors());  // This allows requests from any origin
