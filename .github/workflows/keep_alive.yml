@@ -1,4 +1,4 @@
-name: Keep App Alive
+name: Keep App Alive with Selenium
 
 on:
   schedule:
@@ -8,6 +8,39 @@ jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping Website
+      - name: Set up Python environment
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
         run: |
-          curl https://edit-bossz.github.io/My-Website/
+          pip install selenium
+          sudo apt-get install -y chromium-driver
+
+      - name: Ping Website with Selenium
+        run: |
+          from selenium import webdriver
+          from selenium.webdriver.common.by import By
+          from selenium.webdriver.chrome.service import Service
+          from selenium.webdriver.chrome.options import Options
+          import time
+
+          url = "https://edit-bossz.github.io/My-Website/"
+          expected_response = "Response from server: Data recorded"
+
+          options = Options()
+          options.add_argument("--headless")  # Runs Chrome in headless mode
+          service = Service("/usr/lib/chromium-browser/chromium-driver")
+          driver = webdriver.Chrome(service=service, options=options)
+
+          driver.get(url)
+
+          while True:
+              time.sleep(10)  # Wait for 10 seconds
+              page_source = driver.page_source
+              if expected_response in page_source:
+                  print("Success: Received expected response.")
+                  break
+              print("Waiting for expected response...")
+          driver.quit()
