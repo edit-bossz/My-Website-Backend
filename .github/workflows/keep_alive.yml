@@ -1,13 +1,23 @@
-name: Keep App Alive
+name: Keep App Alive with Selenium
 
 on:
   schedule:
-    - cron: '*/10 * * * *'  # Runs every 10 minutes
+    - cron: "*/10 * * * *" # Runs every 10 minutes
 
 jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping Website
+      - name: Set up Python environment
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
+
+      - name: Install dependencies
         run: |
-          curl https://edit-bossz.github.io/My-Website/
+          pip install selenium
+          sudo apt-get install -y chromium-browser chromium-chromedriver
+
+      - name: Run Python script to ping the website
+        run: |
+          python3 ping_website.py
