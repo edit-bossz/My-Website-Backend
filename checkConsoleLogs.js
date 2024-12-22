@@ -4,7 +4,10 @@ const url = process.env.TARGET_URL || "https://edit-bossz.github.io/My-Website/"
 const checkText = process.env.CHECK_TEXT || "Response from server: Data recorded";
 
 (async () => {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  });
+
   const page = await browser.newPage();
 
   console.log(`Visiting: ${url}`);
