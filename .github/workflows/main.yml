@@ -1,33 +1,29 @@
-name: Ping Website
+name: Monitor Website Console Logs
 
 on:
-  push:
-    branches:
-      - main
   schedule:
-    - cron: "*/10 * * * *" # Runs every 10 minutes
+    - cron: "*/10 * * * *" # Run every 10 minutes
+  workflow_dispatch: # Allows manual triggering of the workflow
 
 jobs:
-  ping:
+  monitor-console:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          python-version: "3.x"
+          node-version: "18"
 
-      - name: Install dependencies
-        run: |
-          pip install selenium
-          sudo apt-get update
-          sudo apt-get install -y chromium-browser chromium-chromedriver
-          sudo ln -s /usr/bin/chromedriver /usr/local/bin/chromedriver
+      - name: Install Puppeteer
+        run: npm install puppeteer
 
-      - name: Run Selenium script
+      - name: Monitor Console Logs
         run: |
-          echo "from selenium import webdriver\nfrom selenium.webdriver.chrome.service import Service\nfrom selenium.webdriver.chrome.options import Options\nimport time\n\nurl = \"https://edit-bossz.github.io/My-Website/\"\nexpected_response = \"Response from server: Data recorded\"\n\noptions = Options()\noptions.add_argument(\"--headless\")  # Runs Chrome in headless mode\noptions.add_argument(\"--remote-debugging-port=9222\")  # Enables remote debugging\nservice = Service(\"/usr/lib/chromium-browser/chromium-driver\")\ndriver = webdriver.Chrome(service=service, options=options)\n\ndriver.get(url)\n\nwhile True:\n    time.sleep(10)  # Wait for 10 seconds\n    logs = driver.get_log('browser')  # Get console logs from the browser\n\n    # Check if any of the logs contain the expected response\n    for log in logs:\n        print(log)\n        if expected_response in log['message']:\n            print(\"Success: Found expected response in console log.\")\n            driver.quit()\n            exit(0)\n    else:\n        print(\"Waiting for expected response in console log...\")\n" > ping_website.py
-          python3 ping_website.py
+          node checkConsoleLogs.js
+        env:
+          TARGET_URL: "https://edit-bossz.github.io/My-Website/"
+          CHECK_TEXT: "Response from server: Data recorded"
