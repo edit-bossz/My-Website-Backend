@@ -23,7 +23,8 @@ const checkText = process.env.CHECK_TEXT || "Response from server: Data recorded
   });
 
   console.log("Checking for text in console...");
-  await page.waitForTimeout(10000); // Wait for 10 seconds to capture console output
+  // Wait for 10 seconds to capture console output
+  await new Promise((resolve) => setTimeout(resolve, 10000));
 
   if (!found) {
     console.log(`"${checkText}" not found.`);
