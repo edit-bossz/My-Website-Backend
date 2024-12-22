@@ -18,10 +18,9 @@ jobs:
           pip install selenium
           sudo apt-get install -y chromium-driver
 
-      - name: Ping Website with Selenium
+      - name: Ping Website and Check Console Logs
         run: |
           from selenium import webdriver
-          from selenium.webdriver.common.by import By
           from selenium.webdriver.chrome.service import Service
           from selenium.webdriver.chrome.options import Options
           import time
@@ -31,6 +30,7 @@ jobs:
 
           options = Options()
           options.add_argument("--headless")  # Runs Chrome in headless mode
+          options.add_argument("--remote-debugging-port=9222")  # Enables remote debugging
           service = Service("/usr/lib/chromium-browser/chromium-driver")
           driver = webdriver.Chrome(service=service, options=options)
 
@@ -38,9 +38,14 @@ jobs:
 
           while True:
               time.sleep(10)  # Wait for 10 seconds
-              page_source = driver.page_source
-              if expected_response in page_source:
-                  print("Success: Received expected response.")
-                  break
-              print("Waiting for expected response...")
-          driver.quit()
+              logs = driver.get_log('browser')  # Get console logs from the browser
+
+              # Check if any of the logs contain the expected response
+              for log in logs:
+                  print(log)
+                  if expected_response in log['message']:
+                      print("Success: Found expected response in console log.")
+                      driver.quit()
+                      break
+              else:
+                  print("Waiting for expected response in console log...")
