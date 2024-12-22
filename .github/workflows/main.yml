@@ -18,14 +18,16 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: "3.12"
+          python-version: "3.x"
 
       - name: Install dependencies
         run: |
           pip install selenium
           sudo apt-get update
           sudo apt-get install -y chromium-browser chromium-chromedriver
-          ln -s /usr/bin/chromedriver /usr/local/bin/chromedriver
+          sudo ln -s /usr/bin/chromedriver /usr/local/bin/chromedriver
 
       - name: Run Selenium script
-        run: python3 ping_website.py
+        run: |
+          echo "from selenium import webdriver\nfrom selenium.webdriver.chrome.service import Service\nfrom selenium.webdriver.chrome.options import Options\nimport time\n\nurl = \"https://edit-bossz.github.io/My-Website/\"\nexpected_response = \"Response from server: Data recorded\"\n\noptions = Options()\noptions.add_argument(\"--headless\")  # Runs Chrome in headless mode\noptions.add_argument(\"--remote-debugging-port=9222\")  # Enables remote debugging\nservice = Service(\"/usr/lib/chromium-browser/chromium-driver\")\ndriver = webdriver.Chrome(service=service, options=options)\n\ndriver.get(url)\n\nwhile True:\n    time.sleep(10)  # Wait for 10 seconds\n    logs = driver.get_log('browser')  # Get console logs from the browser\n\n    # Check if any of the logs contain the expected response\n    for log in logs:\n        print(log)\n        if expected_response in log['message']:\n            print(\"Success: Found expected response in console log.\")\n            driver.quit()\n            exit(0)\n    else:\n        print(\"Waiting for expected response in console log...\")\n" > ping_website.py
+          python3 ping_website.py
